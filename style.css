@@ -1,64 +1,60 @@
 /* BASIC */
 body {
-font-family: Arial, sans-serif;
-margin: 0;
+    font-family: Arial, sans-serif;
+    margin: 0;
 }
 
-/* LOGIN PAGE /
+/* LOGIN PAGE */
 .login-body {
-background: #0b3d91;
-min-height: 100vh;      / better for mobile than fixed height /
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 10px;          / adds space on small screens */
-box-sizing: border-box;
+    background: #0b3d91;
+    min-height: 100vh;      /* better for mobile than fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;          /* adds space on small screens */
+    box-sizing: border-box;
 }
 
 .login-container {
-background: #fff;
-padding: 30px 20px;
-width: 100%;             /* responsive width /
-max-width: 400px;        / limits width on larger screens */
-border-radius: 15px;
-text-align: center;
-box-shadow: 0 0 20px rgba(0,0,0,0.3);
-box-sizing: border-box;
+    background: #fff;
+    padding: 30px 20px;
+    width: 100%;             /* responsive width */
+    max-width: 400px;        /* limits width on larger screens */
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    box-sizing: border-box;
 }
 
 .logo {
-width: 20%;              /* scales on mobile */
-max-width: 90px;
-height: auto;
-margin-bottom: 20px;
+    width: 20%;              /* scales on mobile */
+    max-width: 90px;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 input {
-width: 100%;             /* full width input /
-padding: 12px;
-margin: 10px 0;          / smaller margin for mobile */
-border-radius: 8px;
-border: 1px solid #ccc;
-box-sizing: border-box;
+    width: 100%;             /* full width input */
+    padding: 12px;
+    margin: 10px 0;          /* smaller margin for mobile */
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 button {
-width: 100%;             /* full-width button */
-padding: 12px;
-margin-top: 15px;
-border-radius: 8px;
-border: none;
-background-color: #0b3d91;
-color: #fff;
-font-size: 16px;
-cursor: pointer;
-transition: background 0.3s;
+    width: 100%;             /* full-width button */
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: none;
+    background-color: #0b3d91;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
 button:hover {
-background-color: #072b6e;
-}
-
-This is my style modify naw so dashboard looks nice also not like system
-Ah
-
+    background-color: #072b6e;
+  }
