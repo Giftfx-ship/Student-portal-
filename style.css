@@ -2,59 +2,116 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
+    background: #f4f4f9;
 }
 
-/* LOGIN PAGE */
-.login-body {
-    background: #0b3d91;
-    min-height: 100vh;      /* better for mobile than fixed height */
+/* NAVBAR */
+.navbar {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 10px;          /* adds space on small screens */
-    box-sizing: border-box;
-}
-
-.login-container {
-    background: #fff;
-    padding: 30px 20px;
-    width: 100%;             /* responsive width */
-    max-width: 400px;        /* limits width on larger screens */
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    box-sizing: border-box;
-}
-
-.logo {
-    width: 20%;              /* scales on mobile */
-    max-width: 90px;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-input {
-    width: 100%;             /* full width input */
-    padding: 12px;
-    margin: 10px 0;          /* smaller margin for mobile */
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    width: 100%;             /* full-width button */
-    padding: 12px;
-    margin-top: 15px;
-    border-radius: 8px;
-    border: none;
-    background-color: #0b3d91;
+    padding: 10px 20px;
+    background: #0b3d91;
     color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.nav-logo {
+    width: 40px;
+    margin-right: 10px;
 }
 
-button:hover {
-    background-color: #072b6e;
-        }
+/* SIDEBAR */
+.sidebar {
+    background: #fff;
+    width: 220px;
+    min-height: 100vh;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+.sidebar h3 {
+    margin-top: 0;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    padding: 10px 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.sidebar ul li:hover {
+    background: #0b3d91;
+    color: #fff;
+}
+
+/* CONTENT */
+.content {
+    margin-left: 240px; /* space for sidebar */
+    padding: 20px;
+}
+
+/* Responsive Tables */
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+}
+.result-table th, .result-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+/* CARDS & FORMS */
+.profile-card, .announcement-box, .card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Buttons */
+button, .pay-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #0b3d91;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+button:hover, .pay-btn:hover {
+    background: #072b6e;
+}
+
+/* PASSPORT IMAGE */
+.passport {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* MOBILE RESPONSIVE */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        min-height: auto;
+        box-shadow: none;
+    }
+    .content {
+        margin-left: 0;
+        padding: 10px;
+    }
+}
