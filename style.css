@@ -7,118 +7,53 @@ body {
 /* LOGIN PAGE */
 .login-body {
     background: #0b3d91;
-    height: 100vh;
+    min-height: 100vh; /* better for mobile than fixed height */
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px; /* space for small screens */
 }
 
 .login-container {
     background: #fff;
-    padding: 30px;
-    width: 350px;
+    padding: 30px 20px;
+    width: 100%;          /* responsive width */
+    max-width: 400px;     /* limits width on large screens */
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    box-sizing: border-box;
 }
 
 .logo {
-    width: 90px;
+    width: 20%;          /* scales logo on mobile */
+    max-width: 90px;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 input {
-    width: 90%;
+    width: 100%;          /* full width input */
     padding: 12px;
-    margin: 15px 0;
+    margin: 10px 0;       /* smaller margin for mobile */
     border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 button {
-    width: 95%;
+    width: 100%;          /* full-width button */
     padding: 12px;
-    background: #0b3d91;
-    color: white;
+    margin-top: 15px;
+    border-radius: 8px;
     border: none;
-    border-radius: 8px;
-}
-
-.error {
-    color: red;
-}
-
-/* DASHBOARD */
-.navbar {
-    background: #0b3d91;
-    padding: 15px;
-    color: white;
-    display: flex;
-    align-items: center;
-    font-size: 22px;
-}
-
-.nav-logo {
-    width: 50px;
-    margin-right: 10px;
-}
-
-.sidebar {
-    width: 220px;
-    background: #062a65;
-    color: white;
-    height: 100vh;
-    padding-top: 20px;
-    float: left;
-    position: fixed;
-}
-
-.sidebar ul li {
-    padding: 12px;
+    background-color: #0b3d91;
+    color: #fff;
+    font-size: 16px;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
-.sidebar ul li:hover {
-    background: #0b3d91;
-}
-
-.content {
-    margin-left: 250px;
-    padding: 20px;
-}
-
-/* PROFILE */
-.profile-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-}
-
-.passport {
-    width: 120px;
-    border-radius: 8px;
-}
-
-/* RESULTS */
-.result-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.result-table th, .result-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-}
-
-/* PAYMENTS */
-.pay-btn {
-    background: green;
-    padding: 10px;
-    color: white;
-    border-radius: 8px;
-    margin-right: 10px;
-}
-
-/* DARK MODE */
-.dark-mode {
-    filter: invert(1) hue-rotate(180deg);
-}
+button:hover {
+    background-color: #072b6e;
+    }
