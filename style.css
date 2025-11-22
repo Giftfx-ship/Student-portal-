@@ -1,147 +1,64 @@
-/* DASHBOARD STYLES */
-
-/* BODY */
-.dash-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f4f4f9;
+/* BASIC */
+body {
+font-family: Arial, sans-serif;
+margin: 0;
 }
 
-/* NAVBAR */
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #0b3d91;
-    color: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-.nav-logo {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
+/* LOGIN PAGE /
+.login-body {
+background: #0b3d91;
+min-height: 100vh;      / better for mobile than fixed height /
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 10px;          / adds space on small screens */
+box-sizing: border-box;
 }
 
-/* SIDEBAR */
-.sidebar {
-    background-color: #fff;
-    width: 220px;
-    min-height: 100vh;
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    overflow-y: auto;
-    box-sizing: border-box;
-}
-.sidebar h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #0b3d91;
-}
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-.sidebar ul li {
-    padding: 10px 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.sidebar ul li:hover {
-    background-color: #0b3d91;
-    color: #fff;
+.login-container {
+background: #fff;
+padding: 30px 20px;
+width: 100%;             /* responsive width /
+max-width: 400px;        / limits width on larger screens */
+border-radius: 15px;
+text-align: center;
+box-shadow: 0 0 20px rgba(0,0,0,0.3);
+box-sizing: border-box;
 }
 
-/* CONTENT AREA */
-.content {
-    margin-left: 240px; /* space for sidebar */
-    padding: 20px;
-    min-height: 100vh;
-    box-sizing: border-box;
+.logo {
+width: 20%;              /* scales on mobile */
+max-width: 90px;
+height: auto;
+margin-bottom: 20px;
 }
 
-/* SECTIONS */
-.page h2 {
-    color: #0b3d91;
-    margin-bottom: 15px;
-}
-.page p {
-    margin-bottom: 10px;
-}
-
-/* CARDS */
-.profile-card,
-.announcement-box,
-.card {
-    background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+input {
+width: 100%;             /* full width input /
+padding: 12px;
+margin: 10px 0;          / smaller margin for mobile */
+border-radius: 8px;
+border: 1px solid #ccc;
+box-sizing: border-box;
 }
 
-/* TABLES */
-.result-table {
-    width: 100%;
-    border-collapse: collapse;
-    overflow-x: auto;
-    display: block;
-}
-.result-table th,
-.result-table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ccc;
-}
-
-/* BUTTONS */
-button,
-.pay-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: none;
-    background-color: #0b3d91;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-button:hover,
-.pay-btn:hover {
-    background-color: #072b6e;
+button {
+width: 100%;             /* full-width button */
+padding: 12px;
+margin-top: 15px;
+border-radius: 8px;
+border: none;
+background-color: #0b3d91;
+color: #fff;
+font-size: 16px;
+cursor: pointer;
+transition: background 0.3s;
 }
 
-/* PROFILE IMAGE */
-.passport {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
+button:hover {
+background-color: #072b6e;
 }
 
-/* RESPONSIVE */
-@media screen and (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        position: relative;
-        min-height: auto;
-        box-shadow: none;
-    }
-    .content {
-        margin-left: 0;
-        padding: 10px;
-    }
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
+This is my style modify naw so dashboard looks nice also not like system
+Ah
+
