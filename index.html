@@ -1,26 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCNS Student Portal – Login</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="data.js" defer></script>
-    <script src="login.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OCNS Student Portal</title>
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --primary:#0b3d91;
+      --accent:#1456c4;
+      --bg:#f4f6fa;
+      --card:#ffffff;
+      --muted:#616972;
+      --success:#16a34a;
+      --glass: rgba(255,255,255,0.6);
+      --radius:12px;
+      --shadow: 0 6px 20px rgba(16,24,40,0.08);
+      --transition: 240ms cubic-bezier(.2,.9,.3,1);
+    }
+
+    /* DARK THEME VARIABLES (overridden by .dark-mode) */
+    body { background: var(--bg); color: #0f172a; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+    /* ===== TOPBAR ===== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding: 0 14px;
+      background: linear-gradient(90deg,var(--primary),var(--accent));
+      color: #fff;
+      z-index: 40;
+      box-shadow: 0 3px 8px rgba(7,12,30,0.12);
+    }
+    .topbar .logo-wrap { display:flex; align-items:center; gap:10px; cursor: default; }
+    .topbar img { width:36px; height:36px; border-radius:8px; object-fit:cover; background: #fff2; padding:3px; }
+    .topbar .title { font-weight:700; font-size:17px; letter-spacing:0.1px; }
+
+    /* topbar right controls */
+    .top-controls { margin-left:auto; display:flex; gap:10px; align-items:center; }
+    .hambtn { display:none; background: transparent; border: none; color: white; font-size:20px; padding:8px; border-radius:8px; cursor:pointer; }
+    .hambtn:active { transform: translateY(1px); }
+
+    /* theme toggle (animated) */
+    .theme-toggle {
+      width:44px; height:28px; border-radius:20px; display:inline-flex; align-items:center; padding:4px; gap:6px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(4px);
+      cursor:pointer; transition: var(--transition);
+    }
+    .theme-toggle .knob { width:20px; height:20px; border-radius:50%; background:white; transform:translateX(0); transition: var(--transition); display:flex; align-items:center; justify-content:center; font-size:12px; }
+    .theme-toggle[data-mode="dark"] { background: rgba(0,0,0,0.18); }
+    .theme-toggle[data-mode="dark"] .knob { transform: translateX(16px); background: #fff; }
+
+    /* ===== LAYOUT ===== */
+    .page-wrap { display:flex; gap:18px; padding-top:72px; min-height:100vh; }
+
+    /* SIDEBAR (drawer on small screens) */
+    .sidebar {
+      width:260px;
+      min-height: calc(100vh - 72px);
+      background: var(--card);
+      border-radius: 12px;
+      padding:14px;
+      box-shadow: var(--shadow);
+      margin-left:14px;
+      position: sticky;
+      top:72px;
+      align-self:flex-start;
+      transition: all 260ms ease;
+    }
+    .sidebar h3 { color: var(--primary); margin-bottom:10px; font-size:16px; text-align:left; }
+    .menu-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .menu-list li {
+      display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; color:#0f172a;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .menu-list li:hover { background: #eef4ff; transform: translateY(-2px); }
+    .menu-list li.active { background: linear-gradient(90deg,var(--primary),var(--accent)); color:#fff; box-shadow: 0 8px 24px rgba(11,61,145,0.12); }
+
+    /* CONTENT AREA */
+    .content {
+      flex:1;
+      padding: 10px 22px 36px 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .welcome { display:flex; justify-content:space-between; gap:14px; align-items:center; flex-wrap:wrap; }
+    .welcome .left h2 { color:var(--primary); font-size:20px; margin-bottom:6px; }
+    .welcome .left p { color:var(--muted); }
+    .quick-actions { display:flex; gap:10px; align-items:center; }
+
+    .quick-btn {
+      padding:10px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:600;
+      background: linear-gradient(90deg,var(--primary),var(--accent)); color:white; box-shadow: 0 6px 18px rgba(11,61,145,0.12);
+    }
+
+    /* ANNOUNCEMENTS */
+    .announcements ul { list-style: none; padding-left: 0; }
+    .announcements li { display:flex; gap:12px; align-items:flex-start; padding:10px 8px; border-radius:8px; border-left:3px solid rgba(11,61,145,0.08); margin-bottom:8px; }
+    .announcements li .dot { width:28px; height:28px; border-radius:6px; background:rgba(11,61,145,0.06); display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700; }
+
+    /* RESULTS Table */
+    table.result-table { width:100%; border-collapse:collapse; margin-top:8px; font-size:14px; }
+    .result-table th, .result-table td { text-align:left; padding:10px; border-bottom: 1px solid #e8edf6; }
+    .result-table th { background: linear-gradient(90deg,var(--primary),var(--accent)); color:#fff; }
+
+    /* Small helpers */
+    .muted { color:var(--muted); font-size:13px; }
+
+    /* ===== MOBILE: Drawer behavior ===== */
+    .drawer-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:60; }
+    .sidebar.drawer { position:fixed; left:-320px; top:72px; z-index:70; transition: left 260ms cubic-bezier(.2,.9,.3,1); width: 78%; max-width:320px; height: calc(100vh - 72px); overflow:auto; margin-left:0; }
+    .sidebar.drawer.open { left: 8px; }
+    .drawer-overlay.show { display:block; }
+
+    .hambtn { display:inline-flex; align-items:center; justify-content:center; font-size:20px; border-radius:8px; background: rgba(255,255,255,0.12); padding:8px; border:none; }
+    .hambtn svg { display:block; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .sidebar { display:none; }
+      .sidebar.drawer { display:block; }
+      .page-wrap { padding: 0 10px; }
+    }
+
+    @media (max-width: 520px) {
+      .topbar .title { font-size:15px; }
+      .welcome .left h2 { font-size:18px; }
+      .quick-actions { width:100%; justify-content:flex-start; }
+    }
+
+    /* ===== DARK MODE ===== */
+    .dark-mode {
+      --bg: #0b1220;
+      --card: #0f1724;
+      --muted: #98a1b3;
+      --shadow: 0 6px 18px rgba(0,0,0,0.6);
+      color: #e6eef8;
+    }
+    .dark-mode .topbar { box-shadow: none; }
+    .dark-mode .menu-list li:hover { background: rgba(255,255,255,0.02); color: #fff; }
+    .dark-mode .menu-list li.active { box-shadow: 0 8px 28px rgba(0,0,0,0.5); }
+
+    /* small transition niceness */
+    .card, .sidebar, .content, .welcome .left h2, .menu-list li { transition: var(--transition); }
+  </style>
 </head>
+<body>
 
-<body class="login-body">
-    <div class="login-container">
-        <img src="images/logo.png" class="logo" alt="OCNS Logo">
-
-        <h2>Ogbomoso College of Nursing Science</h2>
-        <p class="subtitle">Student Portal Login</p>
-
-        <input type="text" id="regNumber" placeholder="Enter Registration Number">
-
-        <button onclick="loginStudent()">Sign In</button>
-
-        <p id="error" class="error"></p>
+  <!-- TOPBAR -->
+  <div class="topbar" role="banner">
+    <div class="logo-wrap">
+      <img src="images/logo.png" alt="OCNS logo">
+      <div class="title">OCNS Student Portal</div>
     </div>
-</body>
-</html>
+
+    <div class="top-controls" role="toolbar" aria-label="Top controls">
+      <!-- mobile hamburger -->
+      <button class="hambtn" id="hambtn" aria-label="Open menu" title="Menu" onclick="toggleDrawer()">
+        <!-- simple hamburger icon -->
+        <svg width="20" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- quick action -->
+      <button class="quick-btn" onclick="showPage('courses')" title="Quick register">Register Courses</button>
+
+      <!-- theme toggle -->
+      <div id="themeToggle" class="theme-toggle" role="button" aria-pressed="false" tabindex="0" data-mode="light" onclick="toggleTheme()">
+        <div class="knob" id="toggleKnob">☀️</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer overlay for mobile -->
+  <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <div class="page-wrap">
+    <!-- SIDEBAR (desktop) -->
+    <aside class="sidebar" id="sidebarDesktop" aria-label="Main menu">
+      <h3>Menu</h3>
+      <ul class="menu-list" id="menuDesktop">
+        <li class="active" data-target="home" onclick="showPage('home', this)">🏠 Dashboard</li>
+        <li data-target="profile" onclick="showPage('profile', this)">🧍 Profile</li>
+        <li data-target="courses" onclick="showPage('courses', this)">📚 Course Registration</li>
+        <li data-target="results" onclick="showPage('results', this)">📊 Results</li>
+        <li data-target="payments" onclick="showPage('payments', this)">💳 Payments</li>
+        <li data-target="documents" onclick="showPage('documents', this)">📂 Downloads</li>
+        <li data-target="notice" onclick="showPage('notice', this)">📢 Noticeboard</li>
+        <li data-target="settings" onclick="showPage('settings', this)">⚙️ Settings</li>
+        <li onclick="logout()">🚪 Logout</li>
+      </ul>
+    </aside>
+
+    <!-- SIDEBAR (drawer for mobile) -->
+    <aside class="sidebar drawer" id="sidebarDrawer" aria-hidden="true">
+      <h3>Menu</h3>
+      <ul class="menu-list">
+        <li class="active" data-target="home" onclick="mobileClick('home', this)">🏠 Dashboard</li>
+        <li data-target="profile" onclick="mobileClick('profile', this)">🧍 Profile</li>
+        <li data-target="courses" onclick="mobileClick('courses', this)">📚 Course Registration</li>
+        <li data-target="results" onclick="mobileClick('results', this)">📊 Results</li>
+        <li data-target="payments" onclick="mobileClick('payments', this)">💳 Payments</li>
+        <li data-target="documents" onclick="mobileClick('documents', this)">📂 Downloads</li>
+        <li data-target="notice" onclick="mobileClick('notice', this)">📢 Noticeboard</li>
+        <li data-target="settings" onclick="mobileClick('settings', this)">⚙️ Settings</li>
+        <li onclick="logout()">🚪 Logout</li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content" id="mainContent">
+      <!-- HOME -->
+      <section id="home" class="page card">
+        <div class="welcome">
+          <div class="left">
+            <h2>Welcome Back</h2>
+            <p id="studentName" class="muted">—</p>
+          </div>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="showPage('profile')">My Profile</button>
+            <button class="quick-btn" onclick="showPage('results')">My Results</button>
+          </div>
+        </div>
+        <div class="card announcements" style="margin-top:14px;">
+          <h3 style="color:var(--primary); margin-bottom:8px;">Latest Announcements</h3>
+          <ul>
+            <li><span class="dot">📌</span><div>CBT Exams begin 12th December.</div></li>
+            <li><span class="dot">📌</span><div>Practical posting list available.</div></li>
+            <li><span class="dot">📌</span><div>Hostel inspection mandatory.</div></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Student Profile</h3>
+        <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+          <img src="images/passport.png" alt="passport" style="width:110px;height:110px;border-radius:10px;object-fit:cover;box-shadow:var(--shadow)">
+          <div>
+            <p id="p_name" style="font-weight:700"></p>
+            <p id="p_reg" class="muted"></p>
+            <p id="p_dept" class="muted"></p>
+            <p id="p_level" class="muted"></p>
+            <p class="muted">Email: example@ocns.edu.ng</p>
+            <p class="muted">Phone: 09012345678</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COURSES -->
+      <section id="courses" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Course Registration</h3>
+        <p class="muted">Select your courses:</p>
+        <form id="courseForm" style="margin-top:10px;">
+          <label><input type="checkbox" value="NUR 201"> NUR 201 – Anatomy</label><br>
+          <label><input type="checkbox" value="NUR 202"> NUR 202 – Physiology</label><br>
+          <label><input type="checkbox" value="NUR 203"> NUR 203 – Biochemistry</label><br>
+          <label><input type="checkbox" value="NUR 204"> NUR 204 – Microbiology</label><br>
+          <label><input type="checkbox" value="NUR 205"> NUR 205 – Fundamentals of Nursing</label><br>
+          <button type="button" class="quick-btn" style="margin-top:12px;" onclick="submitCourses()">Submit</button>
+        </form>
+        <p id="courseMsg" class="muted" style="margin-top:8px;"></p>
+      </section>
+
+      <!-- RESULTS -->
+      <section id="results" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Your Results</h3>
+        <table class="result-table" aria-live="polite">
+          <thead>
+            <tr><th>Course</th><th>Test</th><th>Exam</th><th>Total</th><th>Grade</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>NUR 201</td><td>18</td><td>65</td><td>83</td><td>A</td></tr>
+            <tr><td>NUR 202</td><td>16</td><td>58</td><td>74</td><td>B</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- PAYMENTS -->
+      <section id="payments" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Payments</h3>
+        <button class="quick-btn" style="display:block; width:220px; margin-bottom:10px;">Pay School Fees</button>
+        <button class="quick-btn" style="display:block; width:220px; margin-bottom:10px;">Pay Hostel Fees</button>
+        <h4 class="muted" style="margin-top:12px;">Transaction History</h4>
+        <ul class="muted" style="margin-top:8px;">
+          <li>School Fees – Paid – 2025</li>
+          <li>Hostel Fees – Pending</li>
+        </ul>
+      </section>
+
+      <!-- DOCUMENTS -->
+      <section id="documents" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Downloadable Documents</h3>
+        <ul>
+          <li><a href="#" class="muted">📘 Student Handbook (PDF)</a></li>
+          <li><a href="#" class="muted">🗓️ CBT Exam Timetable</a></li>
+          <li><a href="#" class="muted">📄 Practical Posting List</a></li>
+        </ul>
+      </section>
+
+      <!-- NOTICEBOARD -->
+      <section id="notice" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Noticeboard</h3>
+        <ul class="muted">
+          <li>📢 Matriculation holds next week.</li>
+          <li>📢 Uniform inspection starts Monday.</li>
+        </ul>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="settings" class="page card" style="display:none;">
+        <h3 style="color:var(--primary); margin-bottom:8px;">Settings</h3>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <div>
+            <label class="muted">Theme</label><br>
+            <div id="themeToggleInline" class="theme-toggle" data-mode="light" onclick="toggleTheme()" style="margin-top:6px;">
+              <div class="knob" id="knobInline">☀️</div>
+            </div>
+          </div>
+          <div>
+            <button class="quick-btn" onclick="alert('Profile settings coming soon')">Profile Settings</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /* ===== Startup: student data (keeps your original logic) ===== */
+    const student = JSON.parse(localStorage.getItem("student")) || { name: "Gift Igwe", reg: "OCNS/000", department: "Nursing", level: "100" };
+    // If you want original redirect behavior, uncomment next line:
+    // if (!localStorage.getItem("student")) window.location.href = "index.html";
+
+    document.getElementById("studentName").innerText = student.name;
+    document.getElementById("p_name").innerText = "Name: " + student.name;
+    document.getElementById("p_reg").innerText = "Reg Number: " + student.reg;
+    document.getElementById("p_dept").innerText = "Department: " + student.department;
+    document.getElementById("p_level").innerText = "Level: " + student.level;
+
+    /* ===== Page navigation (keeps your structure) ===== */
+    function showPage(pageId, el) {
+      document.querySelectorAll('.page').forEach(s => s.style.display = 'none');
+      document.getElementById(pageId).style.display = 'block';
+      // set active in desktop menu
+      document.querySelectorAll('#menuDesktop li').forEach(li => li.classList.remove('active'));
+      if (el && el.dataset && el.dataset.target) {
+        el.classList.add('active');
+      } else {
+        // try to find matching desktop menu item
+        const target = document.querySelector('#menuDesktop li[data-target="'+pageId+'"]');
+        if (target) target.classList.add('active');
+      }
+      // close drawer on mobile when selecting
+      closeDrawer();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    // mobile drawer menu click
+    function mobileClick(pageId, el) {
+      showPage(pageId);
+      // mark active in drawer
+      document.querySelectorAll('#sidebarDrawer .menu-list li').forEach(li => li.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function logout(){
+      localStorage.clear();
+      // redirect to login
+      window.location.href = "index.html";
+    }
+
+    function submitCourses(){
+      document.getElementById('courseMsg').innerText = "Courses registered successfully!";
+      document.getElementById('courseMsg').style.color = getComputedStyle(document.body).getPropertyValue('--success') || '#16a34a';
+    }
+
+    /* ===== Drawer controls ===== */
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+    const overlay = document.getElementById('drawerOverlay');
+    function toggleDrawer(){
+      const open = sidebarDrawer.classList.toggle('open');
+      overlay.classList.toggle('show', open);
+      sidebarDrawer.setAttribute('aria-hidden', !open);
+    }
+    function closeDrawer(){
+      sidebarDrawer.classList.remove('open');
+      overlay.classList.remove('show');
+      sidebarDrawer.setAttribute('aria-hidden', true);
+    }
+
+    // close drawer on escape
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+    /* ===== THEME Toggle (animated sun/moon) ===== */
+    const rootEl = document.documentElement;
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeKnob = document.getElementById('toggleKnob');
+    const themeToggleInline = document.getElementById('themeToggleInline');
+    const knobInline = document.getElementById('knobInline');
+
+    // read saved preference
+    const saved = localStorage.getItem('ocns-theme') || 'light';
+    applyTheme(saved);
+
+    function toggleTheme(){
+      const current = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      localStorage.setItem('ocns-theme', next);
+    }
+
+    function applyTheme(mode){
+      if(mode === 'dark'){
+        document.body.classList.add('dark-mode');
+        themeToggle.dataset.mode = 'dark';
+        themeToggle.setAttribute('aria-pressed','true');
+        themeKnob.innerText = '🌙';
+        themeToggleInline.dataset.mode = 'dark';
+        knobInline.innerText = '🌙';
+      } else {
+        document.body.classList.remove('dark-mode');
+        themeToggle.dataset.mode = 'light';
+        themeToggle.setAttribute('aria-pressed','false');
+        themeKnob.innerText = '☀️';
+        themeToggleInline.dataset.mode = 'light';
+        knobInline.innerText = '☀️';
+      }
+    }
+
+    /* ===== Accessibili
