@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OCNS Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dash-body">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <img src="images/logo.png" class="nav-logo">
+        <span>OCNS Student Portal</span>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>Menu</h3>
+        <ul>
+            <li onclick="showPage('home')">🏠 Dashboard</li>
+            <li onclick="showPage('profile')">🧍 Profile</li>
+            <li onclick="showPage('courses')">📚 Course Registration</li>
+            <li onclick="showPage('results')">📊 Results</li>
+            <li onclick="showPage('payments')">💳 Payments</li>
+            <li onclick="showPage('documents')">📂 Downloads</li>
+            <li onclick="showPage('notice')">📢 Noticeboard</li>
+            <li onclick="showPage('settings')">⚙️ Settings</li>
+            <li onclick="logout()">🚪 Logout</li>
+        </ul>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- HOME -->
+        <section id="home" class="page">
+            <h2>Welcome Back</h2>
+            <p id="studentName"></p>
+            <div class="announcement-box">
+                <h3>Latest Announcements</h3>
+                <ul>
+                    <li>📌 CBT Exams begin 12th December.</li>
+                    <li>📌 Practical posting list available.</li>
+                    <li>📌 Hostel inspection mandatory.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PROFILE -->
+        <section id="profile" class="page" style="display:none;">
+            <h2>Student Profile</h2>
+            <div class="profile-card">
+                <img src="images/passport.png" class="passport">
+                <p id="p_name"></p>
+                <p id="p_reg"></p>
+                <p id="p_dept"></p>
+                <p id="p_level"></p>
+                <p>Email: example@ocns.edu.ng</p>
+                <p>Phone: 09012345678</p>
+            </div>
+        </section>
+
+        <!-- COURSE REGISTRATION -->
+        <section id="courses" class="page" style="display:none;">
+            <h2>Course Registration</h2>
+            <p>Select your courses:</p>
+
+            <form id="courseForm">
+                <label><input type="checkbox" value="NUR 201"> NUR 201 – Anatomy</label><br>
+                <label><input type="checkbox" value="NUR 202"> NUR 202 – Physiology</label><br>
+                <label><input type="checkbox" value="NUR 203"> NUR 203 – Biochemistry</label><br>
+                <label><input type="checkbox" value="NUR 204"> NUR 204 – Microbiology</label><br>
+                <label><input type="checkbox" value="NUR 205"> NUR 205 – Fundamentals of Nursing</label><br>
+                <button type="button" onclick="submitCourses()">Submit</button>
+            </form>
+
+            <p id="courseMsg"></p>
+        </section>
+
+        <!-- RESULTS -->
+        <section id="results" class="page" style="display:none;">
+            <h2>Your Results</h2>
+            <table class="result-table">
+                <tr>
+                    <th>Course</th>
+                    <th>Test</th>
+                    <th>Exam</th>
+                    <th>Total</th>
+                    <th>Grade</th>
+                </tr>
+                <tr>
+                    <td>NUR 201</td>
+                    <td>18</td>
+                    <td>65</td>
+                    <td>83</td>
+                    <td>A</td>
+                </tr>
+                <tr>
+                    <td>NUR 202</td>
+                    <td>16</td>
+                    <td>58</td>
+                    <td>74</td>
+                    <td>B</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- PAYMENTS -->
+        <section id="payments" class="page" style="display:none;">
+            <h2>Payments</h2>
+            <button class="pay-btn">Pay School Fees</button>
+            <button class="pay-btn">Pay Hostel Fees</button>
+
+            <h3>Transaction History</h3>
+            <ul>
+                <li>School Fees – Paid – 2025</li>
+                <li>Hostel Fees – Pending</li>
+            </ul>
+        </section>
+
+        <!-- DOWNLOAD DOCUMENTS -->
+        <section id="documents" class="page" style="display:none;">
+            <h2>Downloadable Documents</h2>
+            <ul>
+                <li><a href="#">📘 Student Handbook (PDF)</a></li>
+                <li><a href="#">🗓️ CBT Exam Timetable</a></li>
+                <li><a href="#">📄 Practical Posting List</a></li>
+            </ul>
+        </section>
+
+        <!-- NOTICEBOARD -->
+        <section id="notice" class="page" style="display:none;">
+            <h2>Noticeboard</h2>
+            <ul>
+                <li>📢 Matriculation holds next week.</li>
+                <li>📢 Uniform inspection starts Monday.</li>
+            </ul>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="settings" class="page" style="display:none;">
+            <h2>Settings</h2>
+            <button onclick="toggleTheme()">Toggle Dark/Light Mode</button>
+        </section>
+
+    </div>
+
+    <script>
+        const student = JSON.parse(localStorage.getItem("student"));
+        if (!student) window.location.href = "index.html";
+
+        // Fill student details
+        document.getElementById("studentName").innerText = student.name;
+        document.getElementById("p_name").innerText = "Name: " + student.name;
+        document.getElementById("p_reg").innerText = "Reg Number: " + student.reg;
+        document.getElementById("p_dept").innerText = "Department: " + student.department;
+        document.getElementById("p_level").innerText = "Level: " + student.level;
+
+        // Navigation
+        function showPage(page) {
+            document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+            document.getElementById(page).style.display = "block";
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        // Course Reg
+        function submitCourses() {
+            document.getElementById("courseMsg").innerText = "Courses registered successfully!";
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+        }
+    </script>
+
+</body>
+  </html>
